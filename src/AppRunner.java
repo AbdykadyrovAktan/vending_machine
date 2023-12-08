@@ -12,10 +12,10 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class AppRunner {
-
     private static boolean isContinue = true;
     private final UniversalArray<Product> products = new UniversalArrayImpl<>();
     private Payable payMethod;
+    private final Payable[] payMethods = {new Cash(), new BankCard()};
 
     private AppRunner() {
         products.addAll(new Product[]{
@@ -49,9 +49,9 @@ public class AppRunner {
         String choiceStr = fromConsole();
         int choice = Integer.parseInt(choiceStr);
         if (choice == 1) {
-            payMethod = new Cash();
+            payMethod = payMethods[0];
         } else {
-            payMethod = new BankCard();
+            payMethod = payMethods[1];
         }
     }
 
