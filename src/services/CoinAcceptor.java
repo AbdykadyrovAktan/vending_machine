@@ -1,4 +1,4 @@
-package model;
+package services;
 
 public class CoinAcceptor {
     private int amount;

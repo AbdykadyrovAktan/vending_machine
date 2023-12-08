@@ -1,5 +1,6 @@
 import enums.ActionLetter;
 import model.*;
+import services.CoinAcceptor;
 import util.UniversalArray;
 import util.UniversalArrayImpl;
 

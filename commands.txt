@@ -1,0 +1,5 @@
+1) git clone https://github.com/AbdykadyrovAktan/vending_machine.git
+2) git log
+3) git checkout home_work_25
+4) git add .
+5) git commit -m "added file 'commands.txt'"
