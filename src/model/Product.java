@@ -5,7 +5,7 @@ import enums.ActionLetter;
 public class Product {
     protected String name;
     protected ActionLetter actionLetter;
-    protected int price;
+    protected double price;
 
     public Product(String name, ActionLetter actionLetter, int price) {
         this.name = name;
@@ -21,7 +21,7 @@ public class Product {
         return actionLetter;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 

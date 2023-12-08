@@ -1,0 +1,49 @@
+1) git clone https://github.com/AbdykadyrovAktan/vending_machine.git
+2) git log
+3) git checkout home_work_25
+4) git add .
+5) git commit -m "added file 'commands.txt'"
+6) git status
+7) git add .
+8) git commit -m "Added files: 'Payable, BankCard'; Renamed file 'CoinAcceptor' to 'Cash'"
+9) git add .
+10) git commit -m "implemented logic of viewing and changing balance in 'Cash, BankCard, Payable' files"
+11) git log
+12) git status
+13) git add src/exceptions/InvalidActionException.java
+14) git commit -m "added custom exception"
+15) git status
+16) git add src/services/BankCard.java
+17) git status
+18) git commit -m "added check in file 'BankCard'"
+19) git status
+20) git add src/AppRunner.java
+21) git status
+22) git commit -m "added unfinished version of payment via card; added validation of action selection"
+23) git status
+24) git add src/model/Product.java
+25) git status
+26) git commit -m "changed the price data type in the 'Product' file"
+27) git status
+28) git add .
+29) git status
+30) git commit -m "bug fixed(balance was not reduced when purchasing)"
+31) git status
+32) git add .
+33) git status
+34) git commit -m "added user card identification"
+35) git log
+36) git status
+37) git add .
+38) git status
+39) git add .
+40) git commit -m "added validation of 'selectPaymentMethod' method"
+41) git status
+42) git log
+43) git add .
+44) git commit -m "hid the initialization of products in an empty constructor, so that nobody could change it from outside."
+45) git log
+46) git status
+47) git add .
+48) git commit -m "bug fixed(if the balance is less than 20 the balance was not replenished and the program was not terminated)"
+49) git status
