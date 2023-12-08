@@ -61,12 +61,11 @@ public class AppRunner {
             String card = fromConsole();
             validateCard(card, 16);
 
-            int password = new Random().nextInt(9999) + 1;
             System.out.print("Enter card password: ");
             String passwordStr = fromConsole();
             validateCard(passwordStr, 4);
 
-            if (Integer.parseInt(passwordStr) != password) {
+            if (!passwordStr.equals(card.substring(0, 4))) {
                 throw new InvalidActionException("Incorrect password!");
             } else {
                 payMethod = payMethods[1];
