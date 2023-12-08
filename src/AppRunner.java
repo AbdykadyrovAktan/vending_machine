@@ -8,7 +8,6 @@ import util.UniversalArray;
 import util.UniversalArrayImpl;
 
 import java.util.InputMismatchException;
-import java.util.Random;
 import java.util.Scanner;
 
 public class AppRunner {
@@ -47,11 +46,21 @@ public class AppRunner {
     private void selectPaymentMethod() {
         System.out.println("1. У меня монеты\n2. У меня банковская карта");
         String choiceStr = fromConsole();
+        try {
+            validateNum(choiceStr, 1);
+        } catch (NoSuchFieldException | InputMismatchException | InvalidActionException e) {
+            System.out.println(e.getMessage());
+            startSimulation();
+        }
+
         int choice = Integer.parseInt(choiceStr);
+
         if (choice == 1) {
             payMethod = payMethods[0];
-        } else {
+        } else if (choice == 2) {
             identifyUser();
+        } else {
+            startSimulation();
         }
     }
 
@@ -59,11 +68,11 @@ public class AppRunner {
         try {
             System.out.print("Enter card num: ");
             String card = fromConsole();
-            validateCard(card, 16);
+            validateNum(card, 16);
 
             System.out.print("Enter card password: ");
             String passwordStr = fromConsole();
-            validateCard(passwordStr, 4);
+            validateNum(passwordStr, 4);
 
             if (!passwordStr.equals(card.substring(0, 4))) {
                 throw new InvalidActionException("Incorrect password!");
@@ -76,7 +85,7 @@ public class AppRunner {
         }
     }
 
-    private void validateCard(String str, int max) throws NoSuchFieldException, InputMismatchException, InvalidActionException {
+    private void validateNum(String str, int max) throws NoSuchFieldException, InputMismatchException, InvalidActionException {
         if (str.isBlank() || str.isEmpty()) {
             throw new NoSuchFieldException("The value cannot be empty!");
         }
@@ -90,7 +99,6 @@ public class AppRunner {
         if (str.length() != max) {
             throw new InvalidActionException("The card number consists of 16 characters!");
         }
-
     }
 
     private UniversalArray<Product> getAllowedProducts() {
