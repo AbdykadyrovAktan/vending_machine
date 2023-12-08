@@ -1,4 +1,3 @@
-import enums.ActionLetter;
 import exceptions.InvalidActionException;
 import model.*;
 import services.BankCard;
@@ -18,12 +17,8 @@ public class AppRunner {
 
     private AppRunner() {
         products.addAll(new Product[]{
-                new Water(),
-                new CocaCola(),
-                new Soda(),
-                new Snickers(),
-                new Mars(),
-                new Pistachios()
+                new Water(), new CocaCola(), new Soda(),
+                new Snickers(), new Mars(), new Pistachios()
         });
     }
 
@@ -60,6 +55,7 @@ public class AppRunner {
         } else if (choice == 2) {
             identifyUser();
         } else {
+            System.out.println("Choose between '1' and '2'");
             startSimulation();
         }
     }
@@ -85,7 +81,7 @@ public class AppRunner {
         }
     }
 
-    private void validateNum(String str, int max) throws NoSuchFieldException, InputMismatchException, InvalidActionException {
+    private void validateNum(String str, int length) throws NoSuchFieldException, InputMismatchException, InvalidActionException {
         if (str.isBlank() || str.isEmpty()) {
             throw new NoSuchFieldException("The value cannot be empty!");
         }
@@ -96,8 +92,10 @@ public class AppRunner {
             }
         }
 
-        if (str.length() != max) {
-            throw new InvalidActionException("The card number consists of 16 characters!");
+        if (str.length() != length) {
+            throw new InvalidActionException(String.format(
+                    "The value must contain %d digit!", length
+            ));
         }
     }
 
@@ -119,20 +117,20 @@ public class AppRunner {
             validateChoice(action, products);
         } catch (InvalidActionException | InputMismatchException | NoSuchFieldException e) {
             System.err.println(e.getMessage());
-            startSimulation();
+            chooseAction(products);
         }
 
-        for (int i = 0; i < products.size(); i++) {
-            if (products.get(i).getActionLetter().toString().equalsIgnoreCase(action)) {
-                payMethod.setBalance(payMethod.getBalance() - products.get(i).getPrice());
-                System.out.println("Вы купили " + products.get(i).getName());
-                break;
-            } else if (action.equalsIgnoreCase("a")) {
-                payMethod.setBalance(payMethod.getBalance() + 10);
-                break;
-            } else if (action.equalsIgnoreCase("h")) {
-                isContinue = false;
-                break;
+        if (action.equalsIgnoreCase("a")) {
+            payMethod.setBalance(payMethod.getBalance() + 10.0);
+        } else if (action.equalsIgnoreCase("h")) {
+            isContinue = false;
+        } else {
+            for (int i = 0; i < products.size(); i++) {
+                if (products.get(i).getActionLetter().toString().equalsIgnoreCase(action)) {
+                    payMethod.setBalance(payMethod.getBalance() - products.get(i).getPrice());
+                    System.out.println("Вы купили " + products.get(i).getName());
+                    break;
+                }
             }
         }
     }
@@ -150,11 +148,13 @@ public class AppRunner {
             throw new InputMismatchException("The value does not match the expected type!");
         }
 
+        if (str.equalsIgnoreCase("a") || str.equalsIgnoreCase("h")) {
+            return;
+        }
+
         boolean isValid = false;
         for (int i = 0; i < products.size(); i++) {
-            if (str.equalsIgnoreCase(products.get(i).getActionLetter().toString())
-                    || str.equalsIgnoreCase("a")
-                    || str.equalsIgnoreCase("h")) {
+            if (str.equalsIgnoreCase(products.get(i).getActionLetter().toString())) {
                 isValid = true;
                 break;
             }
