@@ -6,3 +6,5 @@
 6) git status
 7) git add .
 8) git commit -m "Added files: 'Payable, BankCard'; Renamed file 'CoinAcceptor' to 'Cash'"
+9) git add .
+10) git commit -m "implemented logic of viewing and changing balance in 'Cash, BankCard, Payable' files"

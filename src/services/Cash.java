@@ -1,17 +1,16 @@
 package services;
 
-public class Cash {
-    private int amount;
+public class Cash implements Payable{
+    private double balance = 100;
 
-    public Cash(int amount) {
-        this.amount = amount;
+
+    @Override
+    public double getBalance() {
+        return balance;
     }
 
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
+    @Override
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 }
