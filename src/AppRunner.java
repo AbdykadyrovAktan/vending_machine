@@ -18,12 +18,12 @@ public class AppRunner {
 
     private AppRunner() {
         products.addAll(new Product[]{
-                new Water(ActionLetter.B, 20),
-                new CocaCola(ActionLetter.C, 50),
-                new Soda(ActionLetter.D, 30),
-                new Snickers(ActionLetter.E, 80),
-                new Mars(ActionLetter.F, 80),
-                new Pistachios(ActionLetter.G, 130)
+                new Water(),
+                new CocaCola(),
+                new Soda(),
+                new Snickers(),
+                new Mars(),
+                new Pistachios()
         });
     }
 
