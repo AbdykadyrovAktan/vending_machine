@@ -44,3 +44,6 @@
 44) git commit -m "hid the initialization of products in an empty constructor, so that nobody could change it from outside."
 45) git log
 46) git status
+47) git add .
+48) git commit -m "bug fixed(if the balance is less than 20 the balance was not replenished and the program was not terminated)"
+49) git status
