@@ -1,18 +1,21 @@
 import enums.ActionLetter;
+import exceptions.InvalidActionException;
 import model.*;
+import services.BankCard;
 import services.Cash;
+import services.Payable;
 import util.UniversalArray;
 import util.UniversalArrayImpl;
 
+import java.util.InputMismatchException;
+import java.util.Random;
 import java.util.Scanner;
 
 public class AppRunner {
 
+    private static boolean isContinue = true;
     private final UniversalArray<Product> products = new UniversalArrayImpl<>();
-
-    private final Cash cash;
-
-    private static boolean isExit = false;
+    private Payable payMethod;
 
     private AppRunner() {
         products.addAll(new Product[]{
@@ -23,32 +26,39 @@ public class AppRunner {
                 new Mars(ActionLetter.F, 80),
                 new Pistachios(ActionLetter.G, 130)
         });
-        cash = new Cash(100);
     }
 
     public static void run() {
         AppRunner app = new AppRunner();
-        while (!isExit) {
+        while (isContinue) {
             app.startSimulation();
         }
     }
 
     private void startSimulation() {
-        print("В автомате доступны:");
+        System.out.println("В автомате доступны:");
         showProducts(products);
-
-        print("Монет на сумму: " + cash.getAmount());
-
-        UniversalArray<Product> allowProducts = new UniversalArrayImpl<>();
-        allowProducts.addAll(getAllowedProducts().toArray());
+        selectPaymentMethod();
+        System.out.println("Монет на сумму: " + payMethod.getBalance());
+        UniversalArray<Product> allowProducts = getAllowedProducts();
         chooseAction(allowProducts);
+    }
 
+    private void selectPaymentMethod() {
+        System.out.println("1. У меня монеты\n2. У меня банковская карта");
+        String choiceStr = fromConsole();
+        int choice = Integer.parseInt(choiceStr);
+        if (choice == 1) {
+            payMethod = new Cash();
+        } else {
+            payMethod = new BankCard();
+        }
     }
 
     private UniversalArray<Product> getAllowedProducts() {
         UniversalArray<Product> allowProducts = new UniversalArrayImpl<>();
         for (int i = 0; i < products.size(); i++) {
-            if (cash.getAmount() >= products.get(i).getPrice()) {
+            if (payMethod.getBalance() >= products.get(i).getPrice()) {
                 allowProducts.add(products.get(i));
             }
         }
@@ -56,45 +66,73 @@ public class AppRunner {
     }
 
     private void chooseAction(UniversalArray<Product> products) {
-        showActions(products);
-        print(" h - Выйти");
-        String action = fromConsole().substring(0, 1);
+        showAvailableOptions(products);
+        String action = fromConsole();
+
         try {
-            for (int i = 0; i < products.size(); i++) {
-                if (products.get(i).getActionLetter().equals(ActionLetter.valueOf(action.toUpperCase()))) {
-                    cash.setAmount(cash.getAmount() - products.get(i).getPrice());
-                    print("Вы купили " + products.get(i).getName());
-                    break;
-                } else if ("h".equalsIgnoreCase(action)) {
-                    isExit = true;
-                    break;
-                }
-            }
-        } catch (IllegalArgumentException e) {
-            print("Недопустимая буква. Попрбуйте еще раз.");
-            chooseAction(products);
+            validateChoice(action, products);
+        } catch (InvalidActionException | InputMismatchException | NoSuchFieldException e) {
+            System.err.println(e.getMessage());
+            startSimulation();
         }
 
-
+        for (int i = 0; i < products.size(); i++) {
+            if (products.get(i).getActionLetter().toString().equalsIgnoreCase(action)) {
+                payMethod.setBalance(payMethod.getBalance() - products.get(i).getPrice());
+                System.out.println("Вы купили " + products.get(i).getName());
+                break;
+            } else if (action.equalsIgnoreCase("a")) {
+                payMethod.setBalance(payMethod.getBalance() + 10);
+                break;
+            } else if (action.equalsIgnoreCase("h")) {
+                isContinue = false;
+                break;
+            }
+        }
     }
 
-    private void showActions(UniversalArray<Product> products) {
+    private void validateChoice(String str, UniversalArray<Product> products) throws InvalidActionException, NoSuchFieldException, InputMismatchException {
+        if (str.isBlank() || str.isEmpty()) {
+            throw new NoSuchFieldException("The value cannot be empty!");
+        }
+
+        if (str.length() > 1) {
+            throw new InvalidActionException("Choose one action!");
+        }
+
+        if (!Character.isAlphabetic(str.charAt(0))) {
+            throw new InputMismatchException("The value does not match the expected type!");
+        }
+
+        boolean isValid = false;
         for (int i = 0; i < products.size(); i++) {
-            print(String.format(" %s - %s", products.get(i).getActionLetter().getValue(), products.get(i).getName()));
+            if (str.equalsIgnoreCase(products.get(i).getActionLetter().toString())
+                    || str.equalsIgnoreCase("a")
+                    || str.equalsIgnoreCase("h")) {
+                isValid = true;
+                break;
+            }
+        }
+        if (!isValid) {
+            throw new InvalidActionException("Choose one available action!");
+        }
+    }
+
+    private void showAvailableOptions(UniversalArray<Product> products) {
+        for (int i = 0; i < products.size(); i++) {
+            System.out.printf(" %s - %s%n", products.get(i).getActionLetter().getValue(), products.get(i).getName());
+        }
+        System.out.println(" a - Пополнить баланс ");
+        System.out.println(" h - Выйти ");
+    }
+
+    private void showProducts(UniversalArray<Product> products) {
+        for (int i = 0; i < products.size(); i++) {
+            System.out.println(products.get(i).toString());
         }
     }
 
     private String fromConsole() {
         return new Scanner(System.in).nextLine();
-    }
-
-    private void showProducts(UniversalArray<Product> products) {
-        for (int i = 0; i < products.size(); i++) {
-            print(products.get(i).toString());
-        }
-    }
-
-    private void print(String msg) {
-        System.out.println(msg);
     }
 }
