@@ -3,3 +3,6 @@
 3) git checkout home_work_25
 4) git add .
 5) git commit -m "added file 'commands.txt'"
+6) git status
+7) git add .
+8) git commit -m "Added files: 'Payable, BankCard'; Renamed file 'CoinAcceptor' to 'Cash'"

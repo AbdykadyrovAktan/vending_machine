@@ -1,9 +1,9 @@
 package services;
 
-public class CoinAcceptor {
+public class Cash {
     private int amount;
 
-    public CoinAcceptor(int amount) {
+    public Cash(int amount) {
         this.amount = amount;
     }
 
