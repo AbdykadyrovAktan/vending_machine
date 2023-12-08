@@ -14,8 +14,8 @@ import java.util.Scanner;
 public class AppRunner {
     private static boolean isContinue = true;
     private final UniversalArray<Product> products = new UniversalArrayImpl<>();
-    private Payable payMethod;
     private final Payable[] payMethods = {new Cash(), new BankCard()};
+    private Payable payMethod;
 
     private AppRunner() {
         products.addAll(new Product[]{
@@ -51,8 +51,47 @@ public class AppRunner {
         if (choice == 1) {
             payMethod = payMethods[0];
         } else {
-            payMethod = payMethods[1];
+            identifyUser();
         }
+    }
+
+    private void identifyUser() {
+        try {
+            System.out.print("Enter card num: ");
+            String card = fromConsole();
+            validateCard(card, 16);
+
+            int password = new Random().nextInt(9999) + 1;
+            System.out.print("Enter card password: ");
+            String passwordStr = fromConsole();
+            validateCard(passwordStr, 4);
+
+            if (Integer.parseInt(passwordStr) != password) {
+                throw new InvalidActionException("Incorrect password!");
+            } else {
+                payMethod = payMethods[1];
+            }
+        } catch (NoSuchFieldException | InputMismatchException | InvalidActionException e) {
+            System.out.println(e.getMessage());
+            selectPaymentMethod();
+        }
+    }
+
+    private void validateCard(String str, int max) throws NoSuchFieldException, InputMismatchException, InvalidActionException {
+        if (str.isBlank() || str.isEmpty()) {
+            throw new NoSuchFieldException("The value cannot be empty!");
+        }
+
+        for (char c : str.toCharArray()) {
+            if (!Character.isDigit(c)) {
+                throw new InputMismatchException("The value does not match the expected type!");
+            }
+        }
+
+        if (str.length() != max) {
+            throw new InvalidActionException("The card number consists of 16 characters!");
+        }
+
     }
 
     private UniversalArray<Product> getAllowedProducts() {

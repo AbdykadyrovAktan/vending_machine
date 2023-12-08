@@ -2,7 +2,7 @@ package services;
 
 import exceptions.InvalidActionException;
 
-public class BankCard implements Payable{
+public class BankCard implements Payable {
     private double balance = 210;
 
     @Override
@@ -18,7 +18,8 @@ public class BankCard implements Payable{
             } catch (InvalidActionException e) {
                 System.err.println(e.getMessage());
             }
+        } else {
+            this.balance = balance;
         }
-        this.balance = balance;
     }
 }
